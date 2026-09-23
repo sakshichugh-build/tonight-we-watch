@@ -48,25 +48,25 @@ export default function QrShare({ sessionId }: { sessionId: string }) {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <canvas ref={canvasRef} className="rounded-2xl border-4 border-brand bg-white p-3" />
-      <p className="max-w-xs break-all text-center text-sm text-ash">{link}</p>
+      <canvas ref={canvasRef} className="rounded-2xl border-4 border-white bg-white p-3 shadow-xl shadow-black/30" />
+      <p className="max-w-xs break-all text-center text-sm text-white/70">{link}</p>
       <div className="flex gap-3">
         <button
           onClick={handleShare}
-          className="rounded-full bg-brand px-5 py-2.5 text-sm font-medium text-white transition-all hover:brightness-110"
+          className="rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-black"
         >
           Share with partner
         </button>
         <button
           onClick={copyLink}
-          className="rounded-full border border-ash/50 px-5 py-2.5 text-sm text-white transition-colors hover:border-ash"
+          className="rounded-full border border-white/40 px-5 py-2.5 text-sm text-white transition-colors hover:border-white"
         >
-          {copied ? <span className="italic text-brand">Copied!</span> : 'Copy link'}
+          {copied ? <span className="italic">Copied!</span> : 'Copy link'}
         </button>
       </div>
-      <p className="max-w-sm text-center text-sm text-ash">
-        Have your partner <span className="italic text-white">scan this QR</span>, or send them the link — either lands them
-        in this <span className="italic text-white">same session</span>.
+      <p className="max-w-sm text-center text-sm text-white/80">
+        Have your partner <span className="italic text-ink">scan this QR</span>, or send them the link — either lands them
+        in this <span className="italic text-ink">same session</span>.
       </p>
     </div>
   )

@@ -75,7 +75,7 @@ export default function SessionHub({ params }: { params: { id: string } }) {
   if (!identity || loading || !state) {
     return (
       <main className="mx-auto max-w-xl px-4 py-10 text-center">
-        <p className="italic text-ash">Loading…</p>
+        <p className="italic text-white/70">Loading…</p>
       </main>
     )
   }
@@ -108,7 +108,7 @@ export default function SessionHub({ params }: { params: { id: string } }) {
       return (
         <main className="mx-auto max-w-xl px-4 py-10">
           <h1 className="mb-4 text-2xl font-bold leading-tight">
-            Your turn — what are you <span className="italic text-brand">in the mood</span> for?
+            Your turn — what are you <span className="italic text-ink">in the mood</span> for?
           </h1>
           <PreferenceForm
             onSubmit={submitPrefs}
@@ -125,9 +125,9 @@ export default function SessionHub({ params }: { params: { id: string } }) {
     if (!partnerJoined) {
       return (
         <main className="mx-auto max-w-xl px-4 py-12">
-          <p className="mb-1 text-center text-xs font-medium uppercase tracking-[0.25em] text-brand">Step 2</p>
+          <p className="mb-1 text-center text-xs font-medium uppercase tracking-[0.25em] text-ink">Step 2</p>
           <h1 className="mb-6 text-center text-2xl font-bold leading-tight">
-            Invite your <span className="italic text-brand">partner</span>
+            Invite your <span className="italic text-ink">partner</span>
           </h1>
           <QrShare sessionId={params.id} />
         </main>
@@ -137,7 +137,7 @@ export default function SessionHub({ params }: { params: { id: string } }) {
     return (
       <main className="mx-auto max-w-xl px-4 py-20 text-center">
         <p className="text-lg text-white/80">
-          Waiting for your partner to <span className="italic text-brand">finish their preferences…</span>
+          Waiting for your partner to <span className="italic text-ink">finish their preferences…</span>
         </p>
       </main>
     )
@@ -147,10 +147,10 @@ export default function SessionHub({ params }: { params: { id: string } }) {
     return (
       <main className="mx-auto max-w-xl px-4 py-20 text-center">
         <p className="text-lg text-white/80">
-          Finding titles you&apos;ll <span className="italic text-brand">both love…</span>
+          Finding titles you&apos;ll <span className="italic text-ink">both love…</span>
         </p>
         {showRetry && (
-          <button onClick={retryGenerate} className="mt-4 text-sm italic text-ash underline hover:text-white">
+          <button onClick={retryGenerate} className="mt-4 text-sm italic text-white/70 underline hover:text-white">
             Taking a while — tap to retry
           </button>
         )}
@@ -164,7 +164,7 @@ export default function SessionHub({ params }: { params: { id: string } }) {
       return (
         <main className="mx-auto max-w-xl px-4 py-20 text-center">
           <p className="text-lg text-white/80">
-            Waiting for your partner to <span className="italic text-brand">finish swiping…</span>
+            Waiting for your partner to <span className="italic text-ink">finish swiping…</span>
           </p>
         </main>
       )
@@ -173,9 +173,9 @@ export default function SessionHub({ params }: { params: { id: string } }) {
       <main className="mx-auto max-w-xl px-4 py-8">
         <div className="mb-5 flex items-baseline justify-between">
           <h1 className="text-xl font-semibold">
-            Round <span className="italic text-brand">{session.round}</span>
+            Round <span className="italic text-ink">{session.round}</span>
           </h1>
-          <span className="text-xs uppercase tracking-[0.2em] text-ash">swipe right to like</span>
+          <span className="text-xs uppercase tracking-[0.2em] text-white/70">swipe right to like</span>
         </div>
         <SwipeDeck
           sessionId={params.id}
@@ -209,7 +209,7 @@ export default function SessionHub({ params }: { params: { id: string } }) {
   return (
     <main className="mx-auto max-w-xl px-4 py-20 text-center">
       <p className="text-lg text-white/80">
-        All done — <span className="italic text-brand">enjoy your watch!</span>
+        All done — <span className="italic text-ink">enjoy your watch!</span>
       </p>
     </main>
   )

@@ -23,16 +23,17 @@ export default function FinalPicks({
   return (
     <div>
       <h2 className="mb-2 text-xl font-bold leading-tight">
-        No mutual match yet — here&apos;s your <span className="italic text-brand">top 5</span>
+        No mutual match yet — here&apos;s your <span className="italic text-ink">top 5</span>
       </h2>
-      <p className="mb-6 text-sm text-ash">
-        Based on what you both leaned toward across both rounds. <span className="italic text-white">Pick one together.</span>
+      <p className="mb-6 text-sm text-white/80">
+        Based on what you both leaned toward across both rounds.{' '}
+        <span className="italic text-ink">Pick one together.</span>
       </p>
       <div className="space-y-3">
         {titles.map((t) => (
           <div
             key={`${t.mediaType}:${t.tmdbId}`}
-            className="flex items-center gap-3 rounded-2xl border border-ash/30 bg-surface p-3"
+            className="flex items-center gap-3 rounded-2xl border border-white/15 bg-ink/50 p-3 backdrop-blur-sm"
           >
             {t.posterUrl && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -40,7 +41,7 @@ export default function FinalPicks({
             )}
             <div className="flex-1">
               <p className="font-semibold leading-tight">
-                {t.title} {t.year ? <span className="font-normal italic text-ash">({t.year})</span> : ''}
+                {t.title} {t.year ? <span className="font-normal italic text-white/60">({t.year})</span> : ''}
               </p>
               <p className="mt-1 text-sm text-white/70">
                 <span className="font-medium text-brand">★ {t.imdbRating?.toFixed(1) ?? '–'}</span> · {t.score}/2 liked
@@ -48,7 +49,7 @@ export default function FinalPicks({
             </div>
             <button
               onClick={() => pick(t)}
-              className="shrink-0 rounded-full bg-brand px-4 py-2 text-sm font-medium text-white transition-all hover:brightness-110"
+              className="shrink-0 rounded-full bg-white px-4 py-2 text-sm font-medium text-brand transition-all hover:bg-white/90"
             >
               We&apos;ll watch this
             </button>

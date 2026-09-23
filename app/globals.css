@@ -2,13 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  background-color: #0f0e0e;
+html {
+  min-height: 100%;
+  /* Red-dominant gradient background (stays red through the full scroll) */
+  background: linear-gradient(165deg, #ff3a54 0%, #fe2e4b 40%, #c81d38 75%, #8f1526 100%);
+  background-attachment: fixed;
 }
 
-/* Brand red selection highlight */
+body {
+  background: transparent;
+}
+
 ::selection {
-  background-color: #fe2e4b;
+  background-color: #0f0e0e;
   color: #ffffff;
 }

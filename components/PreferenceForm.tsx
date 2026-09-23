@@ -42,8 +42,8 @@ function toggleExclusive<T extends string>(current: T[], value: T, exclusiveValu
 function pillClass(active: boolean) {
   return `rounded-full border px-3.5 py-1.5 text-sm transition-colors ${
     active
-      ? 'border-brand bg-brand font-medium text-white'
-      : 'border-ash/50 text-white/70 hover:border-ash hover:text-white'
+      ? 'border-white bg-white font-medium text-brand'
+      : 'border-white/30 bg-white/10 text-white hover:border-white/60'
   }`
 }
 
@@ -77,7 +77,7 @@ export default function PreferenceForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       <fieldset>
-        <legend className="mb-2 text-xs font-medium uppercase tracking-[0.15em] text-white/80">Mood <span className="italic normal-case tracking-normal text-ash">(pick any that fit)</span></legend>
+        <legend className="mb-2 text-xs font-medium uppercase tracking-[0.15em] text-white/80">Mood <span className="italic normal-case tracking-normal text-white/60">(pick any that fit)</span></legend>
         <div className="flex flex-wrap gap-2">
           {MOODS.map((m) => (
             <button
@@ -94,14 +94,14 @@ export default function PreferenceForm({
 
       <fieldset>
         <legend className="mb-2 text-xs font-medium uppercase tracking-[0.15em] text-white/80">
-          Describe the mood <span className="italic normal-case tracking-normal text-ash">(optional)</span>
+          Describe the mood <span className="italic normal-case tracking-normal text-white/60">(optional)</span>
         </legend>
         <textarea
           value={moodText}
           onChange={(e) => setMoodText(e.target.value)}
           rows={3}
           placeholder="e.g. something with a slow burn mystery and a satisfying twist"
-          className="w-full rounded-xl border border-ash/40 bg-surface p-3 text-sm text-white placeholder:italic placeholder:text-ash focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
+          className="w-full rounded-xl border border-white/25 bg-white/10 p-3 text-sm text-white placeholder:italic placeholder:text-white/50 focus:border-white focus:outline-none focus:ring-1 focus:ring-white/50"
         />
       </fieldset>
 
@@ -137,7 +137,7 @@ export default function PreferenceForm({
         <div className="flex flex-wrap items-center gap-2">
           {RATINGS.map((r) => (
             <button type="button" key={r} onClick={() => setMinRating(r)} className={pillClass(minRating === r)}>
-              {r}+{r === 9 && <span className="ml-1.5 text-xs italic text-white/80">very few titles</span>}
+              {r}+{r === 9 && <span className="ml-1.5 text-xs italic opacity-80">very few titles</span>}
             </button>
           ))}
         </div>
@@ -162,7 +162,7 @@ export default function PreferenceForm({
       <button
         type="submit"
         disabled={!canSubmit || submitting}
-        className="w-full rounded-full bg-brand py-3.5 font-medium text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:bg-ash/40 disabled:text-white/50"
+        className="w-full rounded-full bg-ink py-3.5 font-medium text-white transition-all hover:bg-black disabled:cursor-not-allowed disabled:bg-ink/40 disabled:text-white/50"
       >
         {submitting ? <span className="italic">{submittingLabel}</span> : submitLabel}
       </button>

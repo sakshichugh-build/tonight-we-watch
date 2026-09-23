@@ -27,7 +27,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
   return (
     <main className="mx-auto max-w-xl px-4 py-20 text-center">
       {error ? (
-        <p className="text-brand">{error}</p>
+        <p className="font-medium text-ink">{error}</p>
       ) : (
         <p className="text-lg italic text-white/80">Joining session…</p>
       )}

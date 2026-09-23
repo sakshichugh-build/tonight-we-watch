@@ -48,18 +48,25 @@ export default function QrShare({ sessionId }: { sessionId: string }) {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <canvas ref={canvasRef} className="rounded-lg bg-white p-3" />
-      <p className="max-w-xs break-all text-center text-sm text-neutral-400">{link}</p>
+      <canvas ref={canvasRef} className="rounded-2xl border-4 border-brand bg-white p-3" />
+      <p className="max-w-xs break-all text-center text-sm text-ash">{link}</p>
       <div className="flex gap-3">
-        <button onClick={handleShare} className="rounded-md bg-white px-4 py-2 text-sm font-medium text-black">
+        <button
+          onClick={handleShare}
+          className="rounded-full bg-brand px-5 py-2.5 text-sm font-medium text-white transition-all hover:brightness-110"
+        >
           Share with partner
         </button>
-        <button onClick={copyLink} className="rounded-md border border-neutral-700 px-4 py-2 text-sm">
-          {copied ? 'Copied!' : 'Copy link'}
+        <button
+          onClick={copyLink}
+          className="rounded-full border border-ash/50 px-5 py-2.5 text-sm text-white transition-colors hover:border-ash"
+        >
+          {copied ? <span className="italic text-brand">Copied!</span> : 'Copy link'}
         </button>
       </div>
-      <p className="text-center text-sm text-neutral-500">
-        Have your partner scan this QR code, or send them the link — either lands them in this same session.
+      <p className="max-w-sm text-center text-sm text-ash">
+        Have your partner <span className="italic text-white">scan this QR</span>, or send them the link — either lands them
+        in this <span className="italic text-white">same session</span>.
       </p>
     </div>
   )

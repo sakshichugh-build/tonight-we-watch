@@ -32,10 +32,14 @@ export default function HomePage() {
   }
 
   return (
-    <main className="mx-auto max-w-xl px-4 py-10">
-      <h1 className="text-3xl font-bold">Tonight We Watch</h1>
-      <p className="mb-8 mt-2 text-neutral-400">
-        Tell us what you&apos;re in the mood for. Your partner won&apos;t see your answers until you both finish.
+    <main className="mx-auto max-w-xl px-4 py-12">
+      <p className="mb-1 text-xs font-medium uppercase tracking-[0.25em] text-brand">Tonight</p>
+      <h1 className="text-4xl font-semibold leading-none tracking-tight">
+        We <span className="italic text-brand">Watch</span>
+      </h1>
+      <p className="mb-10 mt-3 text-ash">
+        Tell us what you&apos;re in the mood for. Your partner <span className="italic text-white">won&apos;t see</span> your
+        answers until you both finish.
       </p>
       <PreferenceForm
         onSubmit={handleSubmit}
@@ -43,7 +47,7 @@ export default function HomePage() {
         submitLabel="Create session & invite partner"
         submittingLabel="Creating your session…"
       />
-      {error && <p className="mt-4 text-red-400">{error}</p>}
+      {error && <p className="mt-4 text-brand">{error}</p>}
     </main>
   )
 }

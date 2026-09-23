@@ -40,8 +40,10 @@ function toggleExclusive<T extends string>(current: T[], value: T, exclusiveValu
 }
 
 function pillClass(active: boolean) {
-  return `rounded-full border px-3 py-1.5 text-sm transition-colors ${
-    active ? 'border-white bg-white text-black' : 'border-neutral-700 text-neutral-300 hover:border-neutral-500'
+  return `rounded-full border px-3.5 py-1.5 text-sm transition-colors ${
+    active
+      ? 'border-brand bg-brand font-medium text-white'
+      : 'border-ash/50 text-white/70 hover:border-ash hover:text-white'
   }`
 }
 
@@ -75,7 +77,7 @@ export default function PreferenceForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       <fieldset>
-        <legend className="mb-2 font-semibold">Mood (pick any that fit)</legend>
+        <legend className="mb-2 text-xs font-medium uppercase tracking-[0.15em] text-white/80">Mood <span className="italic normal-case tracking-normal text-ash">(pick any that fit)</span></legend>
         <div className="flex flex-wrap gap-2">
           {MOODS.map((m) => (
             <button
@@ -91,18 +93,20 @@ export default function PreferenceForm({
       </fieldset>
 
       <fieldset>
-        <legend className="mb-2 font-semibold">Describe what you&apos;re in the mood for tonight (optional)</legend>
+        <legend className="mb-2 text-xs font-medium uppercase tracking-[0.15em] text-white/80">
+          Describe the mood <span className="italic normal-case tracking-normal text-ash">(optional)</span>
+        </legend>
         <textarea
           value={moodText}
           onChange={(e) => setMoodText(e.target.value)}
           rows={3}
           placeholder="e.g. something with a slow burn mystery and a satisfying twist"
-          className="w-full rounded-md border border-neutral-700 bg-neutral-900 p-3 text-sm placeholder:text-neutral-600 focus:border-neutral-400 focus:outline-none"
+          className="w-full rounded-xl border border-ash/40 bg-surface p-3 text-sm text-white placeholder:italic placeholder:text-ash focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
         />
       </fieldset>
 
       <fieldset>
-        <legend className="mb-2 font-semibold">Language</legend>
+        <legend className="mb-2 text-xs font-medium uppercase tracking-[0.15em] text-white/80">Language</legend>
         <div className="flex flex-wrap gap-2">
           {LANGUAGES.map((l) => (
             <button
@@ -118,7 +122,7 @@ export default function PreferenceForm({
       </fieldset>
 
       <fieldset>
-        <legend className="mb-2 font-semibold">Content type</legend>
+        <legend className="mb-2 text-xs font-medium uppercase tracking-[0.15em] text-white/80">Content type</legend>
         <div className="flex gap-2">
           {(['movies_only', 'include_series'] as ContentType[]).map((ct) => (
             <button type="button" key={ct} onClick={() => setContentType(ct)} className={pillClass(contentType === ct)}>
@@ -129,18 +133,18 @@ export default function PreferenceForm({
       </fieldset>
 
       <fieldset>
-        <legend className="mb-2 font-semibold">Minimum IMDb rating</legend>
-        <div className="flex flex-wrap gap-2">
+        <legend className="mb-2 text-xs font-medium uppercase tracking-[0.15em] text-white/80">Minimum IMDb rating</legend>
+        <div className="flex flex-wrap items-center gap-2">
           {RATINGS.map((r) => (
             <button type="button" key={r} onClick={() => setMinRating(r)} className={pillClass(minRating === r)}>
-              {r}+{r === 9 && <span className="ml-1.5 text-xs text-amber-400">very few titles</span>}
+              {r}+{r === 9 && <span className="ml-1.5 text-xs italic text-white/80">very few titles</span>}
             </button>
           ))}
         </div>
       </fieldset>
 
       <fieldset>
-        <legend className="mb-2 font-semibold">Era</legend>
+        <legend className="mb-2 text-xs font-medium uppercase tracking-[0.15em] text-white/80">Era</legend>
         <div className="flex flex-wrap gap-2">
           {ERAS.map((e) => (
             <button
@@ -158,9 +162,9 @@ export default function PreferenceForm({
       <button
         type="submit"
         disabled={!canSubmit || submitting}
-        className="w-full rounded-md bg-white py-3 font-semibold text-black transition-opacity disabled:opacity-40"
+        className="w-full rounded-full bg-brand py-3.5 font-medium text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:bg-ash/40 disabled:text-white/50"
       >
-        {submitting ? submittingLabel : submitLabel}
+        {submitting ? <span className="italic">{submittingLabel}</span> : submitLabel}
       </button>
     </form>
   )

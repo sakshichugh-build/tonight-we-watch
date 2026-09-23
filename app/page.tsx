@@ -20,8 +20,9 @@ export default function HomePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...prefs, coupleSlug: loadCoupleSlug() }),
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? 'Could not create session')
+      const raw = await res.text()
+      const data = raw ? JSON.parse(raw) : {}
+      if (!res.ok) throw new Error(data.error ?? `Could not create session (HTTP ${res.status})`)
       saveIdentity(data.sessionId, { participantId: data.participantId, role: 'A' })
       router.push(`/session/${data.sessionId}`)
     } catch (e: any) {

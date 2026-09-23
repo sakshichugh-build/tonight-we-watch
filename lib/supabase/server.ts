@@ -5,7 +5,15 @@ import { createClient } from '@supabase/supabase-js'
  * Bypasses RLS — never import this into a client component.
  */
 export function supabaseAdmin() {
-  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !key) {
+    const missing = [!url && 'NEXT_PUBLIC_SUPABASE_URL', !key && 'SUPABASE_SERVICE_ROLE_KEY']
+      .filter(Boolean)
+      .join(', ')
+    throw new Error(`Missing Supabase env var(s): ${missing}`)
+  }
+  return createClient(url, key, {
     auth: { persistSession: false },
   })
 }

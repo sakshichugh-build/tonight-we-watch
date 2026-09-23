@@ -5,6 +5,14 @@ import { PreferencesInput } from '@/lib/types'
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: Request) {
+  try {
+    return await createSession(req)
+  } catch (e: any) {
+    return NextResponse.json({ error: e?.message ?? 'Unexpected server error' }, { status: 500 })
+  }
+}
+
+async function createSession(req: Request) {
   const body = (await req.json()) as PreferencesInput & { coupleSlug?: string | null }
   const db = supabaseAdmin()
 

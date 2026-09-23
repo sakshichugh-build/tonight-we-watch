@@ -103,15 +103,8 @@ export default function SessionHub({ params }: { params: { id: string } }) {
   }
 
   if (session.status === 'waiting_for_partner' || session.status === 'collecting_prefs') {
-    if (!myPreferencesSubmitted) {
-      if (!partnerJoined) {
-        return (
-          <main className="mx-auto max-w-xl px-4 py-10">
-            <h1 className="mb-4 text-2xl font-bold">Invite your partner</h1>
-            <QrShare sessionId={params.id} />
-          </main>
-        )
-      }
+    // Partner B (or anyone) who hasn't filled the form yet, and their partner has already joined.
+    if (!myPreferencesSubmitted && partnerJoined) {
       return (
         <main className="mx-auto max-w-xl px-4 py-10">
           <h1 className="mb-4 text-2xl font-bold">Your turn — what are you in the mood for?</h1>
@@ -124,6 +117,18 @@ export default function SessionHub({ params }: { params: { id: string } }) {
         </main>
       )
     }
+    // No partner has joined yet — always show the invite so they can actually get in.
+    // (Partner A lands here right after creating the session, since their prefs are
+    // already saved; without this they'd be stuck on a dead "waiting" screen.)
+    if (!partnerJoined) {
+      return (
+        <main className="mx-auto max-w-xl px-4 py-10">
+          <h1 className="mb-4 text-2xl font-bold">Invite your partner</h1>
+          <QrShare sessionId={params.id} />
+        </main>
+      )
+    }
+    // Partner joined and I've submitted — just waiting on them to finish their form.
     return (
       <main className="mx-auto max-w-xl px-4 py-10 text-center">
         <p>Waiting for your partner to finish their preferences…</p>

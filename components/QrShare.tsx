@@ -30,7 +30,11 @@ export default function QrShare({ sessionId }: { sessionId: string }) {
       if (!blob) return
       const file = new File([blob], 'watch-tonight-invite.png', { type: 'image/png' })
       const nav = navigator as Navigator & { canShare?: (data: { files: File[] }) => boolean }
-      if (nav.share && nav.canShare?.({ files: [file] })) {
+      // Feature-detect via typeof rather than truthiness: TS's DOM lib declares
+      // share/canShare as always-present, so `if (nav.share)` is flagged as a
+      // tautology even though not every runtime actually implements them.
+      const canShare = typeof nav.share === 'function' && typeof nav.canShare === 'function' && nav.canShare({ files: [file] })
+      if (canShare) {
         try {
           await navigator.share({ files: [file], title: "Pick tonight's watch with me", text: link })
           return

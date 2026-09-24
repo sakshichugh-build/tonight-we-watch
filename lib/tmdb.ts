@@ -103,6 +103,10 @@ async function discoverOnce(
   genreMap: Map<number, string>
 ): Promise<TitleCard[]> {
   const dateField = mediaType === 'movie' ? 'primary_release_date' : 'first_air_date'
+  const today = new Date().toISOString().slice(0, 10)
+  // Never recommend unreleased titles — this is a "watch tonight" app. Cap the upper
+  // date bound at today (or the era's own end date, whichever is earlier).
+  const upperBound = range.lte && range.lte < today ? range.lte : today
   const results: TitleCard[] = []
   for (let page = 1; page <= 2; page++) {
     const params = new URLSearchParams({
@@ -110,13 +114,13 @@ async function discoverOnce(
       page: String(page),
       include_adult: 'false',
       'vote_average.gte': String(filters.minRating),
-      'vote_count.gte': '30',
+      'vote_count.gte': '50',
     })
     if (lang) params.set('with_original_language', lang)
     if (opts.genreIds && opts.genreIds.length > 0) params.set('with_genres', opts.genreIds.join('|'))
     if (opts.keywordIds && opts.keywordIds.length > 0) params.set('with_keywords', opts.keywordIds.join('|'))
     if (range.gte) params.set(`${dateField}.gte`, range.gte)
-    if (range.lte) params.set(`${dateField}.lte`, range.lte)
+    params.set(`${dateField}.lte`, upperBound)
 
     const res = await fetch(`${TMDB_BASE}/discover/${mediaType}?${params.toString()}`, { headers: tmdbHeaders() })
     if (!res.ok) break

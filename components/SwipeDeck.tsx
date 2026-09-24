@@ -61,13 +61,13 @@ export default function SwipeDeck({
   }
 
   if (ordered.length === 0) {
-    return <p className="text-white/80">No titles matched your combined filters this round.</p>
+    return <p className="text-ash">No titles matched your combined filters this round.</p>
   }
 
   if (index >= remaining.length) {
     return (
-      <p className="text-white/80">
-        You&apos;ve swiped through <span className="italic text-ink">all {ordered.length} titles</span>.
+      <p className="text-ash">
+        You&apos;ve swiped through <span className="italic font-medium text-ink">all {ordered.length} titles</span>. 🎉
       </p>
     )
   }
@@ -95,17 +95,17 @@ export default function SwipeDeck({
         <button
           onClick={() => handleSwipe(remaining[index], 'pass')}
           disabled={pending}
-          className="rounded-full border border-white/40 px-7 py-2.5 text-sm text-white transition-colors hover:border-white disabled:opacity-40"
+          className="rounded-full border border-line bg-white px-7 py-2.5 text-sm font-medium text-ink shadow-sm transition-colors hover:border-ink/40 disabled:opacity-40"
         >
-          Pass
+          👈 Pass
         </button>
-        <span className="text-sm italic text-white/70">{remaining.length - index} left</span>
+        <span className="text-sm italic text-ash">{remaining.length - index} left</span>
         <button
           onClick={() => handleSwipe(remaining[index], 'like')}
           disabled={pending}
-          className="rounded-full bg-ink px-8 py-2.5 text-sm font-medium text-white transition-all hover:bg-black disabled:opacity-40"
+          className="rounded-full bg-brand px-8 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand/25 transition-all hover:brightness-105 disabled:opacity-40"
         >
-          Like
+          Like 👉
         </button>
       </div>
     </div>

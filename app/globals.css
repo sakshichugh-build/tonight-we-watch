@@ -4,8 +4,9 @@
 
 html {
   min-height: 100%;
-  /* Red-dominant gradient background (stays red through the full scroll) */
-  background: linear-gradient(165deg, #ff3a54 0%, #fe2e4b 40%, #c81d38 75%, #8f1526 100%);
+  background-color: #ffffff;
+  /* barely-there warm tint for depth, stays essentially white */
+  background-image: radial-gradient(120% 60% at 50% -10%, rgba(254, 46, 75, 0.06) 0%, rgba(255, 255, 255, 0) 60%);
   background-attachment: fixed;
 }
 
@@ -14,6 +15,6 @@ body {
 }
 
 ::selection {
-  background-color: #0f0e0e;
+  background-color: #fe2e4b;
   color: #ffffff;
 }

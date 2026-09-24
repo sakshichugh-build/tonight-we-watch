@@ -48,25 +48,25 @@ export default function QrShare({ sessionId }: { sessionId: string }) {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <canvas ref={canvasRef} className="rounded-2xl border-4 border-white bg-white p-3 shadow-xl shadow-black/30" />
-      <p className="max-w-xs break-all text-center text-sm text-white/70">{link}</p>
+      <canvas ref={canvasRef} className="rounded-2xl border border-line bg-white p-3 shadow-lg shadow-ink/5" />
+      <p className="max-w-xs break-all text-center text-sm text-ash">{link}</p>
       <div className="flex gap-3">
         <button
           onClick={handleShare}
-          className="rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-black"
+          className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand/25 transition-all hover:brightness-105"
         >
           Share with partner
         </button>
         <button
           onClick={copyLink}
-          className="rounded-full border border-white/40 px-5 py-2.5 text-sm text-white transition-colors hover:border-white"
+          className="rounded-full border border-line px-5 py-2.5 text-sm text-ink transition-colors hover:border-ink/40"
         >
-          {copied ? <span className="italic">Copied!</span> : 'Copy link'}
+          {copied ? <span className="italic text-brand">Copied!</span> : 'Copy link'}
         </button>
       </div>
-      <p className="max-w-sm text-center text-sm text-white/80">
-        Have your partner <span className="italic text-ink">scan this QR</span>, or send them the link — either lands them
-        in this <span className="italic text-ink">same session</span>.
+      <p className="max-w-sm text-center text-sm text-ash">
+        Have your partner <span className="italic font-medium text-ink">scan this QR</span>, or send them the link —
+        either lands them in this <span className="italic font-medium text-ink">same session</span>.
       </p>
     </div>
   )

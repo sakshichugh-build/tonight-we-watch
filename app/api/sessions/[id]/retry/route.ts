@@ -19,12 +19,18 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
     return NextResponse.json({ error: 'Nothing to retry' }, { status: 400 })
   }
 
-  if (session.round === 0) {
-    await runRound1(params.id)
-  } else if (session.round === 1) {
-    await runRound2(params.id)
-  } else {
-    await runFinalize(params.id)
+  try {
+    if (session.round === 0) {
+      await runRound1(params.id)
+    } else if (session.round === 1) {
+      await runRound2(params.id)
+    } else {
+      await runFinalize(params.id)
+    }
+  } catch (e: any) {
+    const rollbackStatus = session.round === 0 ? 'collecting_prefs' : `swiping_round_${session.round}`
+    await db.from('sessions').update({ status: rollbackStatus }).eq('id', params.id)
+    return NextResponse.json({ error: `Generation failed: ${e?.message ?? e}` }, { status: 500 })
   }
 
   return NextResponse.json({ ok: true })

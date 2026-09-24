@@ -51,7 +51,14 @@ export async function POST(req: Request, { params }: { params: { id: string } })
       .eq('status', 'collecting_prefs')
       .select()
     if (claim && claim.length > 0) {
-      await runRound1(params.id)
+      try {
+        await runRound1(params.id)
+      } catch (e: any) {
+        // Don't leave the session wedged in 'generating' — roll back so a retry can run,
+        // and surface the reason instead of a silent stuck screen.
+        await db.from('sessions').update({ status: 'collecting_prefs' }).eq('id', params.id)
+        return NextResponse.json({ error: `Pool generation failed: ${e?.message ?? e}` }, { status: 500 })
+      }
     }
   }
 

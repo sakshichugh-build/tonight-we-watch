@@ -78,7 +78,7 @@ function buildPrompt(partners: PartnerInput[], context: BriefContext): string {
 
 export async function generateBrief(partners: PartnerInput[], context: BriefContext = {}): Promise<Brief> {
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.6-flash',
     contents: buildPrompt(partners, context),
     config: {
       responseMimeType: 'application/json',

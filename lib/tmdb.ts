@@ -88,48 +88,86 @@ function normalize(mediaType: MediaType, raw: any, genreMap: Map<number, string>
   }
 }
 
+interface DiscoverOpts {
+  genreIds?: number[]
+  keywordIds?: number[]
+}
+
+/** Run one discover query (2 pages) for a single language + era range. */
+async function discoverOnce(
+  mediaType: MediaType,
+  filters: MergedFilters,
+  lang: string | undefined,
+  range: { gte?: string; lte?: string },
+  opts: DiscoverOpts,
+  genreMap: Map<number, string>
+): Promise<TitleCard[]> {
+  const dateField = mediaType === 'movie' ? 'primary_release_date' : 'first_air_date'
+  const results: TitleCard[] = []
+  for (let page = 1; page <= 2; page++) {
+    const params = new URLSearchParams({
+      sort_by: 'popularity.desc',
+      page: String(page),
+      include_adult: 'false',
+      'vote_average.gte': String(filters.minRating),
+      'vote_count.gte': '30',
+    })
+    if (lang) params.set('with_original_language', lang)
+    if (opts.genreIds && opts.genreIds.length > 0) params.set('with_genres', opts.genreIds.join('|'))
+    if (opts.keywordIds && opts.keywordIds.length > 0) params.set('with_keywords', opts.keywordIds.join('|'))
+    if (range.gte) params.set(`${dateField}.gte`, range.gte)
+    if (range.lte) params.set(`${dateField}.lte`, range.lte)
+
+    const res = await fetch(`${TMDB_BASE}/discover/${mediaType}?${params.toString()}`, { headers: tmdbHeaders() })
+    if (!res.ok) break
+    const data = await res.json()
+    for (const raw of data.results ?? []) results.push(normalize(mediaType, raw, genreMap))
+    if (!data.total_pages || page >= data.total_pages) break
+  }
+  return results
+}
+
+/**
+ * Discover titles in layers so the pool is never starved by an over-specific brief:
+ *   1. genres + keywords (best thematic match)   — never required, just tried first
+ *   2. genres only (mood-aligned, broad)
+ *   3. base filters only (language/era/rating)   — backfill so we always fill the deck
+ * Each layer only runs if we still need more titles.
+ */
 async function discoverForMediaType(
   mediaType: MediaType,
   filters: MergedFilters,
   genreIds: number[],
   keywordIds: number[],
-  genreMap: Map<number, string>
+  genreMap: Map<number, string>,
+  target: number
 ): Promise<TitleCard[]> {
   const languageCodes = filters.languages.map((l) => LANGUAGE_CODES[l]).filter(Boolean)
   const langCombos: (string | undefined)[] = languageCodes.length > 0 ? languageCodes : [undefined]
   const eraRanges = filters.eras.length > 0 ? filters.eras.map(eraDateRange) : [{}]
-  const dateField = mediaType === 'movie' ? 'primary_release_date' : 'first_air_date'
 
-  const results: TitleCard[] = []
-  for (const lang of langCombos) {
-    for (const range of eraRanges) {
-      for (let page = 1; page <= 2; page++) {
-        const params = new URLSearchParams({
-          sort_by: 'popularity.desc',
-          page: String(page),
-          include_adult: 'false',
-          'vote_average.gte': String(filters.minRating),
-          'vote_count.gte': '30',
-        })
-        if (lang) params.set('with_original_language', lang)
-        if (genreIds.length > 0) params.set('with_genres', genreIds.join('|'))
-        if (keywordIds.length > 0) params.set('with_keywords', keywordIds.join('|'))
-        if (range.gte) params.set(`${dateField}.gte`, range.gte)
-        if (range.lte) params.set(`${dateField}.lte`, range.lte)
+  const layers: DiscoverOpts[] = []
+  if (genreIds.length > 0 && keywordIds.length > 0) layers.push({ genreIds, keywordIds })
+  if (genreIds.length > 0) layers.push({ genreIds })
+  layers.push({}) // base filters only — guaranteed backfill
 
-        const res = await fetch(`${TMDB_BASE}/discover/${mediaType}?${params.toString()}`, {
-          headers: tmdbHeaders(),
-        })
-        if (!res.ok) break
-        const data = await res.json()
-        for (const raw of data.results ?? []) {
-          results.push(normalize(mediaType, raw, genreMap))
+  const collected: TitleCard[] = []
+  const seen = new Set<string>()
+  for (const layer of layers) {
+    for (const lang of langCombos) {
+      for (const range of eraRanges) {
+        const batch = await discoverOnce(mediaType, filters, lang, range, layer, genreMap)
+        for (const t of batch) {
+          const key = `${t.mediaType}:${t.tmdbId}`
+          if (seen.has(key)) continue
+          seen.add(key)
+          collected.push(t)
         }
-        if (!data.total_pages || page >= data.total_pages) break
       }
     }
+    if (collected.length >= target) break
   }
-  return results
+  return collected
 }
 
 export async function buildTitlePool(
@@ -138,6 +176,7 @@ export async function buildTitlePool(
   excludeKeys: Set<string> = new Set()
 ): Promise<TitleCard[]> {
   const mediaTypes: MediaType[] = filters.contentType === 'movies_only' ? ['movie'] : ['movie', 'tv']
+  const target = mediaTypes.length > 1 ? 20 : 40
 
   const genreMaps = new Map<MediaType, Map<number, string>>()
   for (const mt of mediaTypes) genreMaps.set(mt, await fetchGenreMap(mt))
@@ -147,7 +186,7 @@ export async function buildTitlePool(
     mediaTypes.map((mt) => {
       const genreMap = genreMaps.get(mt)!
       const genreIds = resolveGenreIdsFromMap(genreMap, brief.genres)
-      return discoverForMediaType(mt, filters, genreIds, keywordIds, genreMap)
+      return discoverForMediaType(mt, filters, genreIds, keywordIds, genreMap, target)
     })
   )
 
